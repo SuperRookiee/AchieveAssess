@@ -1,0 +1,83 @@
+@import '../global.scss';
+
+#card{
+    &_1 {
+        background: url('https://exam.chunjae-platform.com/img/main_img01.png');
+    }
+    &_2 {
+        background: url('https://exam.chunjae-platform.com/img/main_img02.png');
+    }
+    &_3 {
+        background: url('https://exam.chunjae-platform.com/img/main_img03.png');
+    }
+    &_4 {
+        background: url('https://exam.chunjae-platform.com/img/main_img04.png');
+    }
+}
+
+.card {
+    position: relative;
+    transition: color 0.25s;
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        border: 2px solid transparent;
+        width: 0;
+        height: 0;
+    }
+
+    &::before {
+        top: 0;
+        left: 0;
+    }
+
+    &::after {
+        bottom: 0;
+        right: 0;
+    }
+
+    &:hover::before,
+    &:hover::after {
+        width: 100%;
+        height: 100%;
+    }
+    
+    &:hover::before {
+        transition:
+            width 0.1s ease,
+            height 0.1s ease 0.1s;
+    }
+    
+    &:hover::after {
+        transition:
+            width 0.1s ease 0.1s,
+            height 0.1s ease 0.15s;
+    }
+
+
+    &#card_1:hover::before,
+    &#card_3:hover::before {
+        border-top-color: $second;
+        border-right-color: $second;
+    }
+
+    &#card_1:hover::after,
+    &#card_3:hover::after {
+        border-bottom-color: $second;
+        border-left-color: $second;
+    }
+
+    &#card_2:hover::before,
+    &#card_4:hover::before {
+        border-top-color: $third;
+        border-right-color: $third;
+    }
+
+    &#card_2:hover::after,
+    &#card_4:hover::after {
+        border-bottom-color: $third;
+        border-left-color: $third;
+    }
+}

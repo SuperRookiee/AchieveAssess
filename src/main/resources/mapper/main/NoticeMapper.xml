@@ -1,0 +1,10 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="GradeAA.AchieveAssess.domain.main.repository.NoticeRepository">
+    <select id="findAll" resultType="GradeAA.AchieveAssess.domain.main.dto.NoticeResponse">
+        SELECT category, title, content, reg_date
+        FROM notice_board
+        ORDER BY notice_board_id
+    </select>
+</mapper>

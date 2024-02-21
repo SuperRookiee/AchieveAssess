@@ -1,0 +1,32 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="GradeAA.AchieveAssess.domain.scoringSystem.repository.ScoringRepository2">
+
+  <!-- 답안지 및 정답 가져오기 for ScoringService2 -->
+  <select id="getStudentResponsesAndCorrectAnswers"
+    resultType="GradeAA.AchieveAssess.domain.scoringSystem.dto.ResponsesAndAnswers">
+    SELECT sr.response_id,
+           sr.member_id,
+           sr.exam_id,
+           sr.question_id,
+           sr.answer        as studentAnswer,
+           q.correct_answer as correctAnswer,
+           q.score
+    FROM student_responses sr
+           JOIN questions q ON sr.question_id = q.question_id
+    WHERE sr.member_id = #{memberId}
+      and sr.exam_id = #{examId}
+  </select>
+
+  <!-- 정오표 디비에 채점 결과 저장 -->
+  <insert id="saveScoringResults">
+    INSERT INTO scoring_result (response_id, correct_result, score)
+    VALUES
+    <foreach item="result" collection="list" separator=",">
+      (#{result.responseId}, #{result.correctResult}, #{result.score})
+    </foreach>
+  </insert>
+
+</mapper>
+

@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.16'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'GradeAA'
+version = '1.1.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '11'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.1'
+    implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.7.6'
+
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.3.1'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+//React
+def frontendDir = "$projectDir/src/main/react"
+
+tasks.register('installAndBuildReact', Exec) {
+    workingDir "$frontendDir"
+    inputs.dir "$frontendDir"
+    group = BasePlugin.BUILD_GROUP
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine "yarn.cmd", "install"
+        commandLine "yarn.cmd", "add", "tailwindcss"
+        commandLine "yarn.cmd", "run", "build"
+    } else {
+        commandLine "yarn", "install"
+        commandLine "yarn", "add", "tailwindcss"
+        commandLine "yarn", "run", "build"
+    }
+}
+
+tasks.register('copyReactBuildFiles', Copy) {
+    dependsOn "installAndBuildReact"
+    from "$frontendDir/build"
+    into "$projectDir/src/main/resources/static"
+}
+
+processResources.dependsOn "copyReactBuildFiles"

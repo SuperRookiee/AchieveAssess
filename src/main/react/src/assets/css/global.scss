@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+//Font
+@import url('https://webfontworld.github.io/score/SCoreDream.css');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+//Color
+$primary: #2f538c;
+$first: #79a8ff;
+$second: #8189db;
+$third: #299aa4;
+
+
+:root {
+    --primary: #2f538c;
+    --first: #79a8ff;
+    --second: #8189db;
+    --third: #299aa4;
+}
+
+//Layout
+main,
+.Container {
+    width: 1130px;
+    margin: 0 auto;
+}
+
+#header {
+    min-width: 1130px;
+    margin: 0 auto;
+}
+
+.hiddenScroll {
+    -ms-overflow-style: none;
+    /* IE and 엣지 */
+    scrollbar-width: none;
+    /* 파이어폭스 */
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.disableDrag {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    touch-action: none;
+    -webkit-touch-callout: none;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}

@@ -1,0 +1,331 @@
+@import '../global.scss';
+
+#login, #join {
+    .container {
+        max-width: 1130px;
+        min-width: 768px;
+        width: 100%;
+        padding: 50px 0;
+        margin: auto;
+        text-align: center;
+    }
+
+    .tab-wrap {
+        .tab-btn {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            width: 600px;
+            margin: auto;
+            cursor: pointer;
+
+            li {
+                -webkit-box-flex: 1;
+                -ms-flex: 1;
+                flex: 1;
+
+                span {
+                    display: block;
+                    padding: 20px 0;
+                    color: #ccc;
+                    font-weight: 600;
+                    font-size: 22px;
+                    border-bottom: 2px solid #ccc;
+                }
+
+                &.on span {
+                    color: #222;
+                    border-color: #2f538c;
+                }
+            }
+        }
+
+        .tab-cnt {
+            display: none;
+            padding: 52px 0 87px;
+
+            &.on {
+                display: block;
+            }
+
+            .cnt-list {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-pack: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                gap: 18px;
+                margin-bottom: 87px;
+
+                li {
+                    position: relative;
+                    -webkit-box-flex: 1;
+                    -ms-flex: 1;
+                    flex: 1;
+                    height: 440px;
+                    text-align: left;
+                    border: 1px solid #ccc;
+                    -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+
+                    // &:nth-child(1) {
+                    //     background: url(../img/main_img01.png) no-repeat center;
+                    //     background-size: cover;
+                    // }
+
+                    // &:nth-child(2) {
+                    //     background: url(../img/main_img02.png) no-repeat center;
+                    //     background-size: cover;
+
+                    //     &::before,
+                    //     &::after {
+                    //         background-color: #299aa4;
+                    //     }
+
+                    //     a {
+
+                    //         &::before,
+                    //         &::after {
+                    //             background-color: #299aa4;
+                    //         }
+                    //     }
+                    // }
+
+                    // &:nth-child(3) {
+                    //     background: url(../img/main_img03.png) no-repeat center;
+                    //     background-size: cover;
+                    // }
+
+                    // &:nth-child(4) {
+                    //     background: url(../img/main_img04.png) no-repeat center;
+                    //     background-size: cover;
+
+                    //     &::before,
+                    //     &::after {
+                    //         background-color: #299aa4;
+                    //     }
+
+                    //     a {
+
+                    //         &::before,
+                    //         &::after {
+                    //             background-color: #299aa4;
+                    //         }
+                    //     }
+                    // }
+
+                    a {
+                        display: block;
+                        height: 100%;
+                        padding: 69px 18px 0;
+                        -webkit-box-sizing: border-box;
+                        box-sizing: border-box;
+
+                        &::before,
+                        &::after {
+                            content: "";
+                            -webkit-transition-property: width, height;
+                            transition-property: width, height;
+                            -webkit-transition-duration: 0.1s, 2px;
+                            transition-duration: 0.1s, 2px;
+                            display: block;
+                            position: absolute;
+                            background-color: #8189db;
+                            bottom: -1px;
+                        }
+
+                        &::before {
+                            right: -1px;
+                            width: 0;
+                            height: 2px;
+                            -webkit-transition: all .1s ease .1s;
+                            transition: all .1s ease .1s;
+                        }
+
+                        &::after {
+                            left: -1px;
+                            width: 2px;
+                            height: 0;
+                            -webkit-transition: all .1s ease;
+                            transition: all .1s ease;
+                        }
+                    }
+
+                    .tit {
+                        display: block;
+                        margin-bottom: 30px;
+                        font-size: 30px;
+                        font-weight: 900;
+                        letter-spacing: -1.5px;
+                    }
+
+                    .txt {
+                        font-size: 20px;
+                        line-height: 1.5;
+                    }
+
+                    &::before,
+                    &::after {
+                        content: "";
+                        -webkit-transition-property: width, height;
+                        transition-property: width, height;
+                        -webkit-transition-duration: 0.1s, 2px;
+                        transition-duration: 0.1s, 2px;
+                        display: block;
+                        position: absolute;
+                        background-color: #8189db;
+                        top: -1px;
+                    }
+
+                    &::before {
+                        left: -1px;
+                        width: 0;
+                        height: 2px;
+                        -webkit-transition: all .1s ease .1s;
+                        transition: all .1s ease .1s;
+                    }
+
+                    &::after {
+                        right: -1px;
+                        width: 2px;
+                        height: 0;
+                        -webkit-transition: all .1s ease .1s;
+                        transition: all .1s ease .1s;
+                    }
+
+                    &:hover {
+                        &::before {
+                            width: 100%;
+                            -webkit-transition: all .1s ease-in-out;
+                            transition: all .1s ease-in-out;
+                        }
+
+                        &::after {
+                            height: 100%;
+                            -webkit-transition: all .1s ease-in-out .1s;
+                            transition: all .1s ease-in-out .1s;
+                        }
+
+                        a {
+                            &::before {
+                                width: 100%;
+                                -webkit-transition: all .1s ease-in-out .1s;
+                                transition: all .1s ease-in-out .1s;
+                            }
+
+                            &::after {
+                                height: 100%;
+                                -webkit-transition: all .1s ease-in-out .1s;
+                                transition: all .1s ease-in-out .1s;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .ft-btn,
+            .btn-type01 {
+                display: block;
+                width: 400px;
+                padding: 17px 0 15px;
+                margin: auto;
+                color: #fff;
+                text-align: center;
+                font-size: 20px;
+                font-weight: 600;
+                border-radius: 10px;
+                background-color: #2f538c;
+            }
+
+            .ft-btn em,
+            .btn-type01 em {
+                color: #5982c3;
+                font-size: 16px;
+            }
+        }
+    }
+
+    .login {
+
+        input,
+        select {
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            height: 60px;
+            padding: 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        input::-webkit-input-placeholder,
+        select::-webkit-input-placeholder,
+        input:-ms-input-placeholder,
+        select:-ms-input-placeholder,
+        input::-ms-input-placeholder,
+        select::-ms-input-placeholder,
+        input::placeholder,
+        select::placeholder {
+            color: #ccc;
+        }
+    }
+
+    .input-box {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+
+        &.full input {
+            width: 400px;
+        }
+    }
+
+    button,
+    input,
+    optgroup,
+    select,
+    textarea {
+        margin: 0;
+        font-size: 100%;
+        font-family: inherit;
+    }
+
+    button,
+    input {
+        overflow: visible;
+    }
+
+    .input {
+        &_id, &_pw, &_name, &_grade, &_year, &_check {
+            input, select, option {
+                width: 400px;
+                height: 60px;
+                padding: 0 20px;
+                border: 1px solid #ccc;
+                border-radius: 10px;
+                box-sizing: border-box;
+                margin: auto;
+                margin-bottom: 1rem;
+
+                &:focus {
+                    border: 1px solid $primary;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,20 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="GradeAA.AchieveAssess.domain.user.repository.UserRepository">
+
+  <!-- 회원 가입 -->
+  <insert id="insert" parameterType="GradeAA.AchieveAssess.domain.user.dto.LoginRequest">
+    INSERT INTO members (login_id, password, member_name, grade_level, year_level, marketing_yn)
+    VALUES (#{loginId}, #{password}, #{memberName}, #{gradeLevel}, #{yearLevel}, #{marketingYn})
+  </insert>
+
+  <!-- 회원 정보 조회 -->
+  <select id="findByLoginId"
+    resultType="GradeAA.AchieveAssess.domain.user.dto.UserResponse">
+    SELECT member_id, member_name, login_id, password, grade_level, year_level, marketing_yn, exam_yn
+    FROM view_members_exam_status
+    WHERE login_id = #{loginId}
+      and delete_yn = 'N'
+  </select>
+</mapper>

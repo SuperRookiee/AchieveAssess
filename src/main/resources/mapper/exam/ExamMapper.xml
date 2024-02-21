@@ -1,0 +1,118 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="GradeAA.AchieveAssess.domain.exam.repository.ExamRepository">
+    <!-- 회원 정보 조회 -->
+    <select id="getExam" resultType="GradeAA.AchieveAssess.domain.exam.dto.ExamResponse">
+        SELECT q.exam_id, question_id, question_order_name
+        FROM questions AS q  left JOIN exams AS e ON q.exam_id = e.exam_id
+        WHERE q.exam_id = #{examId}
+        ORDER BY q.question_order
+    </select>
+
+    <!-- 이어하기 상태일시 기존 선택답안 조회-->
+    <select id="getExistingAnswers" resultType="GradeAA.AchieveAssess.domain.exam.dto.ExamResponse">
+        SELECT q.question_id, q.question_order_name, sr.answer, sr.duration, q.exam_id, sr.response_id
+        FROM questions AS q JOIN student_responses AS sr ON q.question_id = sr.question_id AND sr.exam_id = #{examId} AND sr.member_id = #{memberId}
+        ORDER BY q.question_order
+    </select>
+
+    <!-- 시험 정보 조회 -->
+    <select id="getExamIdByConditions" resultType="int" parameterType="map">
+        SELECT exam_id FROM exams WHERE grade_level = #{gradeLevel} AND subject = #{subject} AND round = #{round}
+    </select>
+
+    <!-- 답안 입력 -->
+    <insert id="updateExamStudentResponses" parameterType="map">
+        UPDATE student_responses SET answer = #{answer}, duration = #{duration}
+        WHERE response_id = #{responseId}
+    </insert>
+
+    <!--유저의 학급, 회차,년도로 시험id 조희-->
+    <select id="getExamList" resultType="String">
+        SELECT e.exam_id
+        FROM exams AS e
+        WHERE e.grade_level = #{gradeLevel} AND e.for_year = YEAR(NOW()) AND e.`round` = #{round}
+    </select>
+
+    <!--getExamList 쿼리의 exam_id 가지고 응시할 시간표 정보와 응시상태 가져오기 -->
+    <select id="getTimeTableAndStatus" resultType="GradeAA.AchieveAssess.domain.exam.dto.TimeTable">
+        SELECT e.subject, e.question_count, e.test_time, IFNULL(es.status_code, '응시하기') as statusCode, e.exam_id, e.test_period
+        FROM examination_status AS es right JOIN exams AS e ON es.exam_id = e.exam_id AND es.member_id = #{memberId}
+        WHERE e.exam_id IN (${examIds})
+        order by e.test_period
+    </select>
+
+    <select id="getQuestions" resultType="GradeAA.AchieveAssess.domain.exam.dto.Question">
+        SELECT q.question_id id, q.question_order_name name
+        FROM questions AS q
+        WHERE q.exam_id = #{examId}
+        ORDER BY q.question_order
+    </select>
+
+    <!-- 이탈시 처음이탈인지 이미 이탈상태인지 확인 -->
+    <select id="examStatusCheck">
+        SELECT count(es.idx)
+        FROM examination_status AS es
+        WHERE es.member_id = #{memberId} AND es.exam_id = #{examId}
+    </select>
+
+    <!--시험중 이탈시 선택했던 답안 추가하기-->
+    <insert id="insertAnswers" parameterType="map">
+        INSERT INTO student_responses (member_id, exam_id, question_id, answer, duration)
+        VALUES
+            <foreach item="q" collection="questionList" separator=",">
+                (#{memberId}, #{examId}, #{q.id}, #{q.answer}, #{q.duration})
+            </foreach>
+    </insert>
+    
+    <insert id="insertStatusCode">
+        insert into examination_status ( member_id, exam_id, status_code )
+        values
+            ( #{memberId}, #{examId}, '이어하기' )
+    </insert>
+
+    <!-- 이어하기, 재응시시 기존 제출답안 삭제-->
+    <delete id="deleteAnswers">
+        DELETE FROM student_responses
+        WHERE member_id = #{memberId} AND exam_id = #{examId}
+    </delete>
+
+    <!-- 재응시시 기존 응시상태 삭제-->
+    <delete id="deleteStatus">
+        DELETE FROM examination_status
+        WHERE member_id = #{memberId} AND exam_id = #{examId}
+    </delete>
+
+    <!-- 기본 student response생성을 위한 questions id 가지고오기-->
+    <select id="getQuestionId" resultType="GradeAA.AchieveAssess.domain.exam.dto.QuestionForId">
+        SELECT q.question_id, q.exam_id
+        FROM questions AS q
+        WHERE q.exam_id = #{examId}
+    </select>
+
+    <!--응시나, 재응시시 기본 student response-->
+    <insert id="insertInitResponse" parameterType="list">
+        INSERT INTO student_responses (member_id, exam_id, question_id)
+        VALUES
+        <foreach item="q" collection="questionIds" separator=",">
+            (#{memberId}, #{q.examId}, #{q.questionId})
+        </foreach>
+    </insert>
+
+    <!-- 최중제출시 응시상태 재응시 상태로-->
+    <update id="updateStatus">
+        UPDATE examination_status AS es SET status_code = '재응시'
+        WHERE es.member_id = #{memberId} AND es.exam_id = #{examId}
+    </update>
+
+    <!-- 레포트 해당시험 해설 html 조회 -->
+    <select id="selectExamExplain" resultType="GradeAA.AchieveAssess.domain.exam.dto.ExamExplain">
+        SELECT sr.answer, q.correct_answer, tb.item_contents, tb.item_explain_text
+        FROM tb_item_on_explain tb JOIN student_responses sr ON tb.question_id = sr.question_id
+                                   JOIN questions q ON tb.question_id = q.question_id
+        WHERE sr.member_id = #{memberId}
+          AND sr.exam_id = #{examId}
+        ORDER BY tb.item_order
+    </select>
+</mapper>
+

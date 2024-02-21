@@ -1,0 +1,222 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="GradeAA.AchieveAssess.domain.report.repository.ReportRepository">
+
+    <!-- 회원ID와 응시상태로 시험정보(round, subject) 받아오기 + 시험참여(시험ID, 응시일자) 정보 제공-->
+    <select id="getExamInfoDto" resultType="GradeAA.AchieveAssess.domain.report.dto.ExamInfoDto">
+        SELECT exams.exam_id, round, subject, exam_date
+        FROM examination_status JOIN exams ON examination_status.exam_id = exams.exam_id
+        WHERE member_id = #{memberId}
+          AND status_code = '재응시'
+    </select>
+
+    <!-- 기본리포트 정오표 불러오기-->
+    <select id="getBasicErratumResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.BasicErratumResponse">
+        SELECT score, question_order, question_order_name, explanations, correct_result
+        FROM view_exam_results
+        WHERE member_id = #{memberId}
+          AND exam_id = #{examId}
+    </select>
+
+    <!-- 평가결과 요약 불러오기-->
+    <select id="getResultSummaryResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.ResultSummaryResponse">
+        SELECT quest_total, quest_correct, achieve_rate, achieve_level
+        FROM report_results
+        WHERE member_id = #{memberId}
+          AND exam_id = #{examId}
+    </select>
+
+    <!-- 모든 문항 메타데이터 불러오기-->
+    <select id="getAllQuestionDataResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.QuestionDataResponse">
+        SELECT subject_ability, content_area, activity_area, difficulty, duration, answer_type, question_type,
+               question_order, question_order_name, correct_answer, answer, correct_result, average_correct_rate
+        FROM view_exam_results
+        WHERE exam_id = #{examId}
+    </select>
+
+    <!-- 교과 역량만-->
+    <select id="getDistinctDifficultyResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.QuestionDataResponse">
+        SELECT distinct difficulty
+        FROM view_exam_results
+        WHERE exam_id = #{examId}
+        ORDER BY question_order
+    </select>
+
+    <!-- 문항 난이도만-->
+    <select id="getDistinctSubjectAbilResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.QuestionDataResponse">
+        SELECT distinct subject_ability
+        FROM view_exam_results
+        WHERE exam_id = #{examId}
+        ORDER BY question_order
+    </select>
+
+    <!-- 교과 내용영역만-->
+    <select id="getDistinctContentAreaResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.QuestionDataResponse">
+        SELECT distinct content_area
+        FROM view_exam_results
+        WHERE exam_id = #{examId}
+        ORDER BY question_order
+    </select>
+
+    <!-- 교과 행동영역만-->
+    <select id="getDistinctActivityAreaResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.QuestionDataResponse">
+        SELECT distinct activity_area
+        FROM view_exam_results
+        WHERE exam_id = #{examId}
+        ORDER BY question_order
+    </select>
+
+    <!-- 문제 유형만-->
+    <select id="getDistinctQuestionTypeResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.QuestionDataResponse">
+        SELECT distinct question_type
+        FROM view_exam_results
+        WHERE exam_id = #{examId}
+        ORDER BY question_order
+    </select>
+
+    <!-- 응답 유형만-->
+    <select id="getDistinctAnswerTypeResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.QuestionDataResponse">
+        SELECT distinct answer_type
+        FROM view_exam_results
+        WHERE exam_id = #{examId}
+        ORDER BY question_order
+    </select>
+
+    <!-- 나의 문항 메타데이터 불러오기-->
+    <select id="getOneQuestionDataResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.QuestionDataResponse">
+        SELECT subject_ability, content_area, activity_area, difficulty, duration, answer_type, question_type,
+               question_order, question_order_name, correct_answer, answer, correct_result, average_correct_rate
+        FROM view_exam_results
+        WHERE member_id = #{memberId}
+          AND exam_id = #{examId}
+    </select>
+
+    <!-- 모든 교과 역량별 성취율 불러오기 -->
+    <select id="getAllSubAbilRateResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.AchieveRateResponse">
+        SELECT average_correct_rate
+        FROM view_exam_results
+        WHERE activity_area =  #{activityArea}
+    </select>
+
+    <!-- 나의 교과 역량별 성취율 불러오기 -->
+    <select id="getOneSubAbilRateResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.AchieveRateResponse">
+        SELECT correct_result
+        FROM view_exam_results
+        WHERE activity_area =  #{activityArea}
+          AND member_id = #{memberId}
+          AND exam_id = #{examId}
+    </select>
+
+    <!-- 모든 문항 난이도별 성취율 불러오기 -->
+    <select id="getAllDifficultyRateResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.AchieveRateResponse">
+        SELECT average_correct_rate
+        FROM view_exam_results
+        WHERE difficulty =  #{difficulty}
+    </select>
+
+    <!-- 나의 문항 난이도별 성취율 불러오기 -->
+    <select id="getOneDifficultyRateResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.AchieveRateResponse">
+        SELECT correct_result
+        FROM view_exam_results
+        WHERE difficulty =  #{difficulty}
+          AND member_id = #{memberId}
+          AND exam_id = #{examId}
+    </select>
+
+    <!-- 모든 교과 내용 영역별 성취율 불러오기 -->
+    <select id="getAllSubContRateResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.AchieveRateResponse">
+        SELECT average_correct_rate
+        FROM view_exam_results
+        WHERE content_area =  #{contentArea}
+    </select>
+
+    <!-- 나의 교과 내용 영역별 성취율 불러오기 -->
+    <select id="getOneSubContRateResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.AchieveRateResponse">
+        SELECT correct_result
+        FROM view_exam_results
+        WHERE content_area =  #{contentArea}
+          AND member_id = #{memberId}
+          AND exam_id = #{examId}
+    </select>
+
+    <!-- 모든 교과 행동 영역별 성취율 불러오기 -->
+    <select id="getAllSubActRateResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.AchieveRateResponse">
+        SELECT average_correct_rate
+        FROM view_exam_results
+        WHERE activity_area =  #{activityArea}
+    </select>
+
+    <!-- 나의 교과 행동 영역별 성취율 불러오기 -->
+    <select id="getOneSubActRateResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.AchieveRateResponse">
+        SELECT correct_result
+        FROM view_exam_results
+        WHERE activity_area =  #{activityArea}
+          AND member_id = #{memberId}
+          AND exam_id = #{examId}
+    </select>
+
+    <!-- 모든 문항 난이도별 문제 풀이 평균 소요 시간 불러오기 -->
+    <select id="getAllDifficultyDurationResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.DurationResponse">
+        SELECT duration
+        FROM view_exam_results
+        WHERE difficulty =  #{difficulty}
+    </select>
+
+    <!-- 나의 문항 난이도별 문제 풀이 평균 소요 시간 불러오기 -->
+    <select id="getOneDifficultyDurationResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.DurationResponse">
+        SELECT duration
+        FROM view_exam_results
+        WHERE difficulty =  #{difficulty}
+          AND member_id = #{memberId}
+          AND exam_id = #{examId}
+    </select>
+
+    <!-- 모든 문항 교과 내용 영역별 문제 풀이 평균 소요 시간 -->
+    <select id="getAllContActDurationResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.DurationResponse">
+        SELECT duration
+        FROM view_exam_results
+        WHERE activity_area =  #{activityArea}
+    </select>
+
+    <!-- 나의 문항 교과 내용 영역별 문제 풀이 평균 소요 시간 -->
+    <select id="getOneContActDurationResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.DurationResponse">
+        SELECT duration
+        FROM view_exam_results
+        WHERE activity_area =  #{activityArea}
+          AND member_id = #{memberId}
+          AND exam_id = #{examId}
+    </select>
+
+    <!-- 모든 문제 유형별 정답률 -->
+    <select id="getAllQuestTypeRateResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.AchieveRateResponse">
+        SELECT average_correct_rate
+        FROM view_exam_results
+        WHERE question_type =  #{questionType}
+    </select>
+
+    <!-- 나의 문제 유형별 정답률 -->
+    <select id="getOneQuestTypeRateResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.AchieveRateResponse">
+        SELECT correct_result
+        FROM view_exam_results
+        WHERE question_type =  #{questionType}
+          AND member_id = #{memberId}
+          AND exam_id = #{examId}
+    </select>
+
+    <!-- 모든 응답 유형별 정답률 -->
+    <select id="getAllAnswerTypeRateResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.AchieveRateResponse">
+        SELECT average_correct_rate
+        FROM view_exam_results
+        WHERE answer_type =  #{answerType}
+    </select>
+
+    <!-- 나의 응답 유형별 정답률 -->
+    <select id="getOneAnswerTypeRateResponse" resultType="GradeAA.AchieveAssess.domain.report.dto.AchieveRateResponse">
+        SELECT correct_result
+        FROM view_exam_results
+        WHERE answer_type =  #{answerType}
+          AND member_id = #{memberId}
+          AND exam_id = #{examId}
+    </select>
+
+</mapper>

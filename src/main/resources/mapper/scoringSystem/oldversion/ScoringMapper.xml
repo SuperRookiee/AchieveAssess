@@ -1,0 +1,37 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="GradeAA.AchieveAssess.domain.scoringSystem.repository.oldversion.ScoringRepository">
+
+  <!-- 제출된 수험자 응답 (답안지) 가져오기 -> student_responses -->
+  <select id="getStudentResponses"
+    resultType="GradeAA.AchieveAssess.domain.scoringSystem.dto.oldversion.StudentResponses">
+    SELECT member_id,
+           exam_id,
+           question_id,
+           answer,
+           duration,
+           start_time,
+           end_time,
+           response_id
+    FROM student_responses
+    WHERE member_id = #{memberId}
+      and exam_id = #{examId}
+  </select>
+
+  <!-- 문항에서 정답 가져오기 -> questions_correct_answer -->
+  <select id="getCorrectAnswers"
+    resultType="GradeAA.AchieveAssess.domain.scoringSystem.dto.oldversion.CorrectAnswer">
+    SELECT exam_id, question_id, question_order, correct_answer
+    FROM questions
+    WHERE exam_id = #{examId}
+  </select>
+
+  <!-- 정오표 디비에 채점 결과 저장 -->
+  <insert id="saveScoringResult">
+    INSERT INTO scoring_result (response_id, correct_result, score)
+    VALUES (#{responseId}, #{correctResult}, #{score})
+  </insert>
+
+</mapper>
+
